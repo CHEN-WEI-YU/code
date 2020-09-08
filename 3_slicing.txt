@@ -1,0 +1,52 @@
+#choose some infomation in DNA(.vcf)
+
+'''
+import re
+    for line in vcf:
+    line = line.rstrip()
+    split = line.split("\t")
+    location_vcf = int(split[1].rstrip())
+    for linechr3 in chr3:
+        linechr3 = linechr3.rstrip()
+        splitchr3 = linechr3.split("\t")
+        losmall = int(splitchr3[3].rstrip())
+        lobig = int(splitchr3[4].rstrip())
+        gene = splitchr3[8]
+        if location_vcf >= losmall and location_vcf <= lobig:
+            name=re.findall("gene_name\s([^ ]+)", gene)
+            genename = name[0]
+            gene_name = genename[1:-2] 
+            resultchr3.writelines(line + "\t" + gene_name + "\n")
+            
+    chr3.seek(0)
+
+
+vcf.close()      
+tran.close()
+variant.close() ''' 
+
+
+#find the snp with chosen gene in DNA 
+
+import re
+vcf = open("atleast2.vcf")
+tran = open("tran433.txt")
+variant = open("variantsin433.vcf", "w")
+
+for line in vcf:
+    line = line.rstrip()
+    split = line.split()
+    for gene in tran:
+        gene = gene.rstrip()
+        all = gene.split("\t")
+        chromo = "chr" + all[1].rstrip()
+        if split[10]==chromo:
+            if int(split[11]) >= int(all[2]) and int(split[11]) <= int(all[3]):     
+                print(line + "\t" + all[0] + "\n")
+                variant.writelines(line + "\t" + all[0] + "\n")
+
+    tran.seek(0)
+
+vcf.close()      
+tran.close()
+variant.close()  
